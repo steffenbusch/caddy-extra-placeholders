@@ -18,11 +18,9 @@ import (
 	"fmt"
 	"math/rand"
 	"net/http"
-	"strconv"
 	"time"
 
 	"github.com/caddyserver/caddy/v2"
-	"github.com/caddyserver/caddy/v2/caddyconfig/caddyfile"
 	"github.com/caddyserver/caddy/v2/caddyconfig/httpcaddyfile"
 	"github.com/caddyserver/caddy/v2/modules/caddyhttp"
 	"github.com/shirou/gopsutil/v4/host"
@@ -175,46 +173,6 @@ func (e ExtraPlaceholders) ServeHTTP(w http.ResponseWriter, r *http.Request, nex
 
 	// Call the next handler in the chain.
 	return next.ServeHTTP(w, r)
-}
-
-// parseCaddyfile parses tokens from the Caddyfile into a new ExtraPlaceholders instance.
-func parseCaddyfile(h httpcaddyfile.Helper) (caddyhttp.MiddlewareHandler, error) {
-	var m ExtraPlaceholders
-	err := m.UnmarshalCaddyfile(h.Dispenser)
-	return m, err
-}
-
-// UnmarshalCaddyfile processes the configuration from the Caddyfile.
-func (e *ExtraPlaceholders) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
-	// Consume the directive name.
-	d.Next()
-
-	for d.NextBlock(0) {
-		switch d.Val() {
-		case "rand_int":
-			args := d.RemainingArgs()
-			if len(args) != 2 {
-				return d.ArgErr()
-			}
-			min, err1 := strconv.Atoi(args[0])
-			max, err2 := strconv.Atoi(args[1])
-			if err1 != nil || err2 != nil {
-				return d.ArgErr()
-			}
-			e.RandIntMin = min
-			e.RandIntMax = max
-		case "time_format_custom":
-			if d.NextArg() {
-				e.TimeFormatCustom = d.Val()
-			} else {
-				return d.ArgErr()
-			}
-		default:
-			// Handle unknown subdirective with an error message
-			return d.Errf("unknown subdirective: %s", d.Val())
-		}
-	}
-	return nil
 }
 
 // Interface guards to ensure ExtraPlaceholders implements the necessary interfaces.
