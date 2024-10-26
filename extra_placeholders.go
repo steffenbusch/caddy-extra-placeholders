@@ -209,6 +209,9 @@ func (e *ExtraPlaceholders) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 			} else {
 				return d.ArgErr()
 			}
+		default:
+			// Handle unknown subdirective with an error message
+			return d.Errf("unknown subdirective: %s", d.Val())
 		}
 	}
 	return nil
