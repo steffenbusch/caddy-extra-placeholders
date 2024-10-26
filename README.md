@@ -30,6 +30,7 @@ This plugin introduces new placeholders that can be used within Caddy configurat
 | `{extra.time.now.timezone_name}`     | The current timezone abbreviation (e.g., CEST).       |
 | `{extra.time.now.iso_week}`          | The current ISO week number of the year.              |
 | `{extra.time.now.iso_year}`          | The ISO year corresponding to the current ISO week.   |
+| `{extra.time.now.custom}`            | Current time in a custom format, configurable via the `time_format_custom` directive. |
 |                                      | Note: All `extra.time.now.*` placeholders refer to the system's local timezone. |
 
 These placeholders can be used in Caddyfiles to provide dynamic content and system information in responses.
@@ -80,6 +81,20 @@ If `rand_int` is not specified, the default values are:
 - `RandIntMax = 100`
 
 This means that `{extra.rand.int}` will default to generating a random integer between 0 and 100 if not explicitly configured.
+
+### Custom Time Format
+
+The `{extra.time.now.custom}` placeholder can be configured using the `time_format_custom` subdirective inside the `extra_placeholders` directive.
+This allows you to specify a custom date and time format using [Go's time format syntax](https://pkg.go.dev/time#pkg-constants).
+
+```caddyfile
+extra_placeholders {
+    # For DD.MM.YYYY HH:MM:SS
+    time_format_custom "02.01.2006 15:04:05"
+}
+```
+
+If `time_format_custom` is not specified, it defaults to `"2006-01-02 15:04:05"`. This format will be used whenever `{extra.time.now.custom}` is referenced.
 
 ### Example: Conditional Redirect Based on Random Value
 
