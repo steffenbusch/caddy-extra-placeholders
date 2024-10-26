@@ -15,7 +15,7 @@ This plugin introduces new placeholders that can be used within Caddy configurat
 | `{extra.load1}`                | System load average over the last 1 minute.       |
 | `{extra.load5}`                | System load average over the last 5 minutes.      |
 | `{extra.load15}`               | System load average over the last 15 minutes.     |
-| `{extra.uptime}`               | System uptime in a human-readable format.         |
+| `{extra.hostinfo.uptime}`               | System uptime in a human-readable format.         |
 
 These placeholders can be used in Caddyfiles to provide dynamic content and system information in responses.
 
@@ -38,7 +38,7 @@ To use the extra placeholders, you can add the following directive to your Caddy
 :8080 {
     extra_placeholders
 
-    respond "Caddy Version: {extra.caddy.version.full}, Uptime: {extra.uptime}"
+    respond "Caddy Version: {extra.caddy.version.full}, Uptime: {extra.hostinfo.uptime}"
 }
 ```
 
