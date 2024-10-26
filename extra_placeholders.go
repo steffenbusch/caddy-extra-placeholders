@@ -15,6 +15,7 @@
 package extraplaceholders
 
 import (
+	"fmt"
 	"math/rand"
 	"net/http"
 	"strconv"
@@ -46,7 +47,7 @@ func init() {
 // `{extra.caddy.version.simple}` | Simple version information of the Caddy server.
 // `{extra.caddy.version.full}` | Full version information of the Caddy server.
 // `{extra.rand.float}` | Random float value between 0.0 and 1.0.
-// `{extra.rand.int}` | Random integer value between the configured min and max.
+// `{extra.rand.int}` | Random integer value between the configured min and max (default is 0 to 100).
 // `{extra.loadavg.1}` | System load average over the last 1 minute.
 // `{extra.loadavg.5}` | System load average over the last 5 minutes.
 // `{extra.loadavg.15}` | System load average over the last 15 minutes.
@@ -58,6 +59,24 @@ func (ExtraPlaceholders) CaddyModule() caddy.ModuleInfo {
 		ID:  "http.handlers.extra_placeholders",
 		New: func() caddy.Module { return new(ExtraPlaceholders) },
 	}
+}
+
+// Provision sets up the module. It is called once the module is instantiated.
+func (e *ExtraPlaceholders) Provision(ctx caddy.Context) error {
+	// Set default values if not configured
+	if e.RandIntMin == 0 && e.RandIntMax == 0 {
+		e.RandIntMin = 0
+		e.RandIntMax = 100
+	}
+	return nil
+}
+
+// Validate ensures the configuration is correct.
+func (e *ExtraPlaceholders) Validate() error {
+	if e.RandIntMax <= e.RandIntMin {
+		return fmt.Errorf("invalid configuration: RandIntMax (%d) must be greater than RandIntMin (%d)", e.RandIntMax, e.RandIntMin)
+	}
+	return nil
 }
 
 // ServeHTTP adds new placeholders and passes the request to the next handler in the chain.
@@ -136,5 +155,7 @@ func (e *ExtraPlaceholders) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 // Interface guards to ensure ExtraPlaceholders implements the necessary interfaces.
 var (
 	_ caddy.Module                = (*ExtraPlaceholders)(nil)
+	_ caddy.Provisioner           = (*ExtraPlaceholders)(nil)
+	_ caddy.Validator             = (*ExtraPlaceholders)(nil)
 	_ caddyhttp.MiddlewareHandler = (*ExtraPlaceholders)(nil)
 )
