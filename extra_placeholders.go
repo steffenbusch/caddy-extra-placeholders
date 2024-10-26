@@ -32,10 +32,10 @@ import (
 
 // ExtraPlaceholders represents the structure for the plugin.
 type ExtraPlaceholders struct {
-	RandIntMin int    `json:"rand_int_min,omitempty"`
-	RandIntMax int    `json:"rand_int_max,omitempty"`
-	TimeFormat string `json:"time_format,omitempty"`
-	logger     *zap.Logger
+	RandIntMin       int    `json:"rand_int_min,omitempty"`
+	RandIntMax       int    `json:"rand_int_max,omitempty"`
+	TimeFormatCustom string `json:"time_format_custom,omitempty"`
+	logger           *zap.Logger
 }
 
 func init() {
@@ -69,7 +69,7 @@ func init() {
 // `{extra.time.now.timezone_name}` | Current timezone abbreviation (e.g., CEST).
 // `{extra.time.now.iso_week}` | Current ISO week number of the year.
 // `{extra.time.now.iso_year}` | ISO year corresponding to the current ISO week.
-// `{extra.time.now.custom}` | Current time in a custom format, configurable via the `time_format` directive.
+// `{extra.time.now.custom}` | Current time in a custom format, configurable via the `time_format_custom` directive.
 
 // CaddyModule returns the module information required by Caddy to register the plugin.
 func (ExtraPlaceholders) CaddyModule() caddy.ModuleInfo {
@@ -88,10 +88,17 @@ func (e *ExtraPlaceholders) Provision(ctx caddy.Context) error {
 		e.RandIntMin = 0
 		e.RandIntMax = 100
 	}
-	// Set default time format if not configured
-	if e.TimeFormat == "" {
-		e.TimeFormat = "2006-01-02 15:04:05" // Default format for custom time placeholder
+	if e.TimeFormatCustom == "" {
+		e.TimeFormatCustom = "2006-01-02 15:04:05" // Default format for custom time placeholder
 	}
+
+	// Log the chosen configuration values
+	e.logger.Info("ExtraPlaceholders plugin configured",
+		zap.Int("RandIntMin", e.RandIntMin),
+		zap.Int("RandIntMax", e.RandIntMax),
+		zap.String("TimeFormatCustom", e.TimeFormatCustom),
+	)
+
 	return nil
 }
 
@@ -164,7 +171,7 @@ func (e ExtraPlaceholders) ServeHTTP(w http.ResponseWriter, r *http.Request, nex
 	repl.Set("extra.time.now.iso_year", isoYear)
 
 	// Set custom time format placeholder
-	repl.Set("extra.time.now.custom", now.Format(e.TimeFormat))
+	repl.Set("extra.time.now.custom", now.Format(e.TimeFormatCustom))
 
 	// Call the next handler in the chain.
 	return next.ServeHTTP(w, r)
@@ -196,9 +203,9 @@ func (e *ExtraPlaceholders) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 			}
 			e.RandIntMin = min
 			e.RandIntMax = max
-		case "time_format":
+		case "time_format_custom":
 			if d.NextArg() {
-				e.TimeFormat = d.Val()
+				e.TimeFormatCustom = d.Val()
 			} else {
 				return d.ArgErr()
 			}
