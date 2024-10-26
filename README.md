@@ -16,7 +16,7 @@ This plugin introduces new placeholders that can be used within Caddy configurat
 | `{extra.loadavg.5}`                  | System load average over the last 5 minutes.          |
 | `{extra.loadavg.15}`                 | System load average over the last 15 minutes.         |
 | `{extra.hostinfo.uptime}`            | System uptime in a human-readable format.             |
-| `{extra.time.now.month}`             | Current month as an integer (e.g., 10 for October).   |
+| `{extra.time.now.month}`             | Current month as an integer (e.g., 5 for May).        |
 | `{extra.time.now.month_padded}`      | Current month as a zero-padded string (e.g., "05" for May). |
 | `{extra.time.now.day}`               | Current day of the month as an integer.               |
 | `{extra.time.now.day_padded}`        | Current day of the month as a zero-padded string.     |
@@ -30,6 +30,7 @@ This plugin introduces new placeholders that can be used within Caddy configurat
 | `{extra.time.now.timezone_name}`     | The current timezone abbreviation (e.g., CEST).       |
 | `{extra.time.now.iso_week}`          | The current ISO week number of the year.              |
 | `{extra.time.now.iso_year}`          | The ISO year corresponding to the current ISO week.   |
+|                                      | Note: All `extra.time.now.*` placeholders refer to the system's local timezone. |
 
 These placeholders can be used in Caddyfiles to provide dynamic content and system information in responses.
 
