@@ -12,10 +12,10 @@ This plugin introduces new placeholders that can be used within Caddy configurat
 | `{extra.caddy.version.full}`   | Full version information of the Caddy server.     |
 | `{extra.rand.float}`           | Random float value between 0.0 and 1.0.           |
 | `{extra.rand.int.0-100}`       | Random integer value between 0 and 100.           |
-| `{extra.load1}`                | System load average over the last 1 minute.       |
-| `{extra.load5}`                | System load average over the last 5 minutes.      |
-| `{extra.load15}`               | System load average over the last 15 minutes.     |
-| `{extra.hostinfo.uptime}`               | System uptime in a human-readable format.         |
+| `{extra.loadavg.1}`            | System load average over the last 1 minute.       |
+| `{extra.loadavg.5}`            | System load average over the last 5 minutes.      |
+| `{extra.loadavg.15}`           | System load average over the last 15 minutes.     |
+| `{extra.hostinfo.uptime}`      | System uptime in a human-readable format.         |
 
 These placeholders can be used in Caddyfiles to provide dynamic content and system information in responses.
 
