@@ -39,16 +39,14 @@ func init() {
 
 // Placeholder | Description
 // ------------|-------------
-// `{extra.caddy.version.simple}` | The simple version of the Caddy server.
-
 // `{extra.caddy.version.simple}` | Simple version information of the Caddy server.
 // `{extra.caddy.version.full}` | Full version information of the Caddy server.
 // `{extra.rand.float}` | Random float value between 0.0 and 1.0.
 // `{extra.rand.int.0-100}` | Random integer value between 0 and 100.
-// `{extra.load1}` | System load average over the last 1 minute.
-// `{extra.load5}` | System load average over the last 5 minutes.
-// `{extra.load15}` | System load average over the last 15 minutes.
-// `{extra.uptime}` | System uptime in a human-readable format.
+// `{extra.loadavg.1}` | System load average over the last 1 minute.
+// `{extra.loadavg.5}` | System load average over the last 5 minutes.
+// `{extra.loadavg.15}` | System load average over the last 15 minutes.
+// `{extra.hostinfo.uptime}` | System uptime in a human-readable format.
 
 // CaddyModule returns the module information required by Caddy to register the plugin.
 func (ExtraPlaceholders) CaddyModule() caddy.ModuleInfo {
@@ -78,18 +76,18 @@ func (ExtraPlaceholders) ServeHTTP(w http.ResponseWriter, r *http.Request, next 
 	// Set placeholders for system load averages (1, 5, and 15 minutes).
 	loadAvg, err := load.Avg()
 	if err == nil {
-		repl.Set("extra.load1", loadAvg.Load1)
-		repl.Set("extra.load5", loadAvg.Load5)
-		repl.Set("extra.load15", loadAvg.Load15)
+		repl.Set("extra.loadavg.1", loadAvg.Load1)
+		repl.Set("extra.loadavg.5", loadAvg.Load5)
+		repl.Set("extra.loadavg.15", loadAvg.Load15)
 	}
 
 	// Set placeholder for system uptime.
 	uptime, err := host.Uptime()
 	if err == nil {
 		uptimeDuration := time.Duration(uptime) * time.Second
-		repl.Set("extra.uptime", uptimeDuration.String())
+		repl.Set("extra.hostinfo.uptime", uptimeDuration.String())
 	} else {
-		repl.Set("extra.uptime", "error retrieving uptime")
+		repl.Set("extra.hostinfo.uptime", "error retrieving uptime")
 	}
 
 	// Call the next handler in the chain.
