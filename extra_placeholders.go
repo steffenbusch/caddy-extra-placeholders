@@ -132,7 +132,7 @@ func (e ExtraPlaceholders) ServeHTTP(w http.ResponseWriter, r *http.Request, nex
 	}
 
 	// Set placeholders for current time (month, day, hour, minute, second).
-	now := time.Now()
+	now := time.Now() // System's local timezone
 	repl.Set("extra.time.now.month", int(now.Month()))
 	repl.Set("extra.time.now.month_padded", fmt.Sprintf("%02d", now.Month()))
 	repl.Set("extra.time.now.day", now.Day())
