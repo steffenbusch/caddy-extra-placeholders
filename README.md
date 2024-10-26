@@ -6,16 +6,31 @@ This repository contains the **Extra Placeholders** plugin for the [Caddy](https
 
 This plugin introduces new placeholders that can be used within Caddy configurations:
 
-| Placeholder                    | Description                                           |
-|--------------------------------|-------------------------------------------------------|
-| `{extra.caddy.version.simple}` | Simple version information of the Caddy server.       |
-| `{extra.caddy.version.full}`   | Full version information of the Caddy server.         |
-| `{extra.rand.float}`           | Random float value between 0.0 and 1.0.               |
-| `{extra.rand.int}`             | Random integer value between the configured min and max (default is 0 to 100). |
-| `{extra.loadavg.1}`            | System load average over the last 1 minute.           |
-| `{extra.loadavg.5}`            | System load average over the last 5 minutes.          |
-| `{extra.loadavg.15}`           | System load average over the last 15 minutes.         |
-| `{extra.hostinfo.uptime}`      | System uptime in a human-readable format.             |
+| Placeholder                          | Description                                           |
+|--------------------------------------|-------------------------------------------------------|
+| `{extra.caddy.version.simple}`       | Simple version information of the Caddy server.       |
+| `{extra.caddy.version.full}`         | Full version information of the Caddy server.         |
+| `{extra.rand.float}`                 | Random float value between 0.0 and 1.0.               |
+| `{extra.rand.int}`                   | Random integer value between the configured min and max (default is 0 to 100). |
+| `{extra.loadavg.1}`                  | System load average over the last 1 minute.           |
+| `{extra.loadavg.5}`                  | System load average over the last 5 minutes.          |
+| `{extra.loadavg.15}`                 | System load average over the last 15 minutes.         |
+| `{extra.hostinfo.uptime}`            | System uptime in a human-readable format.             |
+| `{extra.time.now.month}`             | Current month as an integer (e.g., 5 for May).        |
+| `{extra.time.now.month_padded}`      | Current month as a zero-padded string (e.g., "05" for May). |
+| `{extra.time.now.day}`               | Current day of the month as an integer.               |
+| `{extra.time.now.day_padded}`        | Current day of the month as a zero-padded string.     |
+| `{extra.time.now.hour}`              | Current hour in 24-hour format as an integer.         |
+| `{extra.time.now.hour_padded}`       | Current hour in 24-hour format as a zero-padded string. |
+| `{extra.time.now.minute}`            | Current minute as an integer.                         |
+| `{extra.time.now.minute_padded}`     | Current minute as a zero-padded string.               |
+| `{extra.time.now.second}`            | Current second as an integer.                         |
+| `{extra.time.now.second_padded}`     | Current second as a zero-padded string.               |
+| `{extra.time.now.timezone_offset}`   | The current timezone offset from UTC (e.g., +0200).   |
+| `{extra.time.now.timezone_name}`     | The current timezone abbreviation (e.g., CEST).       |
+| `{extra.time.now.iso_week}`          | The current ISO week number of the year.              |
+| `{extra.time.now.iso_year}`          | The ISO year corresponding to the current ISO week.   |
+|                                      | Note: All `extra.time.now.*` placeholders refer to the system's local timezone. |
 
 These placeholders can be used in Caddyfiles to provide dynamic content and system information in responses.
 
