@@ -21,7 +21,6 @@ import (
 	"time"
 
 	"github.com/caddyserver/caddy/v2"
-	"github.com/caddyserver/caddy/v2/caddyconfig/httpcaddyfile"
 	"github.com/caddyserver/caddy/v2/modules/caddyhttp"
 	"github.com/shirou/gopsutil/v4/host"
 	"github.com/shirou/gopsutil/v4/load"
@@ -34,13 +33,6 @@ type ExtraPlaceholders struct {
 	RandIntMax       int    `json:"rand_int_max,omitempty"`
 	TimeFormatCustom string `json:"time_format_custom,omitempty"`
 	logger           *zap.Logger
-}
-
-func init() {
-	// Register the module with Caddy and specify where in the directive order it should be applied.
-	caddy.RegisterModule(ExtraPlaceholders{})
-	httpcaddyfile.RegisterHandlerDirective("extra_placeholders", parseCaddyfile)
-	httpcaddyfile.RegisterDirectiveOrder("extra_placeholders", "before", "redir")
 }
 
 // Placeholder | Description
