@@ -15,8 +15,10 @@
 package extraplaceholders
 
 import (
+	"fmt"
 	"math/rand"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/caddyserver/caddy/v2"
@@ -28,7 +30,10 @@ import (
 )
 
 // ExtraPlaceholders represents the structure for the plugin.
-type ExtraPlaceholders struct{}
+type ExtraPlaceholders struct {
+	RandIntMin int `json:"rand_int_min,omitempty"`
+	RandIntMax int `json:"rand_int_max,omitempty"`
+}
 
 func init() {
 	// Register the module with Caddy and specify where in the directive order it should be applied.
@@ -42,7 +47,7 @@ func init() {
 // `{extra.caddy.version.simple}` | Simple version information of the Caddy server.
 // `{extra.caddy.version.full}` | Full version information of the Caddy server.
 // `{extra.rand.float}` | Random float value between 0.0 and 1.0.
-// `{extra.rand.int.0-100}` | Random integer value between 0 and 100.
+// `{extra.rand.int}` | Random integer value between the configured min and max (default is 0 to 100).
 // `{extra.loadavg.1}` | System load average over the last 1 minute.
 // `{extra.loadavg.5}` | System load average over the last 5 minutes.
 // `{extra.loadavg.15}` | System load average over the last 15 minutes.
@@ -56,8 +61,26 @@ func (ExtraPlaceholders) CaddyModule() caddy.ModuleInfo {
 	}
 }
 
+// Provision sets up the module. It is called once the module is instantiated.
+func (e *ExtraPlaceholders) Provision(ctx caddy.Context) error {
+	// Set default values if not configured
+	if e.RandIntMin == 0 && e.RandIntMax == 0 {
+		e.RandIntMin = 0
+		e.RandIntMax = 100
+	}
+	return nil
+}
+
+// Validate ensures the configuration is correct.
+func (e *ExtraPlaceholders) Validate() error {
+	if e.RandIntMax <= e.RandIntMin {
+		return fmt.Errorf("invalid configuration: RandIntMax (%d) must be greater than RandIntMin (%d)", e.RandIntMax, e.RandIntMin)
+	}
+	return nil
+}
+
 // ServeHTTP adds new placeholders and passes the request to the next handler in the chain.
-func (ExtraPlaceholders) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddyhttp.Handler) error {
+func (e ExtraPlaceholders) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddyhttp.Handler) error {
 	// Retrieve the replacer from the request context.
 	repl, ok := r.Context().Value(caddy.ReplacerCtxKey).(*caddy.Replacer)
 	if !ok {
@@ -71,7 +94,11 @@ func (ExtraPlaceholders) ServeHTTP(w http.ResponseWriter, r *http.Request, next 
 
 	// Set placeholders for random float and integer values.
 	repl.Set("extra.rand.float", rand.Float64())
-	repl.Set("extra.rand.int.0-100", rand.Intn(101))
+	if e.RandIntMax > e.RandIntMin {
+		repl.Set("extra.rand.int", rand.Intn(e.RandIntMax-e.RandIntMin+1)+e.RandIntMin)
+	} else {
+		repl.Set("extra.rand.int", rand.Intn(101)) // Default range 0-100 if not properly configured
+	}
 
 	// Set placeholders for system load averages (1, 5, and 15 minutes).
 	loadAvg, err := load.Avg()
@@ -103,10 +130,24 @@ func parseCaddyfile(h httpcaddyfile.Helper) (caddyhttp.MiddlewareHandler, error)
 
 // UnmarshalCaddyfile processes the configuration from the Caddyfile.
 func (e *ExtraPlaceholders) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
-	// Consume the directive name and ensure no extra arguments are provided.
+	// Consume the directive name.
 	d.Next()
-	if d.NextArg() {
-		return d.ArgErr()
+
+	for d.NextBlock(0) {
+		switch d.Val() {
+		case "rand_int":
+			args := d.RemainingArgs()
+			if len(args) != 2 {
+				return d.ArgErr()
+			}
+			min, err1 := strconv.Atoi(args[0])
+			max, err2 := strconv.Atoi(args[1])
+			if err1 != nil || err2 != nil {
+				return d.ArgErr()
+			}
+			e.RandIntMin = min
+			e.RandIntMax = max
+		}
 	}
 	return nil
 }
@@ -114,5 +155,7 @@ func (e *ExtraPlaceholders) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 // Interface guards to ensure ExtraPlaceholders implements the necessary interfaces.
 var (
 	_ caddy.Module                = (*ExtraPlaceholders)(nil)
+	_ caddy.Provisioner           = (*ExtraPlaceholders)(nil)
+	_ caddy.Validator             = (*ExtraPlaceholders)(nil)
 	_ caddyhttp.MiddlewareHandler = (*ExtraPlaceholders)(nil)
 )
