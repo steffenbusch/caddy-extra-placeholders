@@ -27,14 +27,8 @@ import (
 	"go.uber.org/zap"
 )
 
-// ExtraPlaceholders represents the structure for the plugin.
-type ExtraPlaceholders struct {
-	RandIntMin       int    `json:"rand_int_min,omitempty"`
-	RandIntMax       int    `json:"rand_int_max,omitempty"`
-	TimeFormatCustom string `json:"time_format_custom,omitempty"`
-	logger           *zap.Logger
-}
-
+// ExtraPlaceholders provides additional placeholders that can be used within Caddy configurations:
+//
 // Placeholder | Description
 // ------------|-------------
 // `{extra.caddy.version.simple}` | Simple version information of the Caddy server.
@@ -60,6 +54,20 @@ type ExtraPlaceholders struct {
 // `{extra.time.now.iso_week}` | Current ISO week number of the year.
 // `{extra.time.now.iso_year}` | ISO year corresponding to the current ISO week.
 // `{extra.time.now.custom}` | Current time in a custom format, configurable via the `time_format_custom` directive.
+type ExtraPlaceholders struct {
+	// RandIntMax defines the maximum value (inclusive) for the `{extra.rand.int}` placeholder.
+	RandIntMin int `json:"rand_int_min,omitempty"`
+
+	// RandIntMax defines the maximum value (inclusive) for the `{extra.rand.int}` placeholder.
+	RandIntMax int `json:"rand_int_max,omitempty"`
+
+	// TimeFormatCustom specifies a custom time format for the `{extra.time.now.custom}` placeholder.
+	// If left empty, a default format of "2006-01-02 15:04:05" is used.
+	TimeFormatCustom string `json:"time_format_custom,omitempty"`
+
+	// logger provides structured logging for the plugin's internal operations.
+	logger *zap.Logger
+}
 
 // CaddyModule returns the module information required by Caddy to register the plugin.
 func (ExtraPlaceholders) CaddyModule() caddy.ModuleInfo {
