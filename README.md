@@ -1,6 +1,8 @@
 # Extra Placeholders Caddy Plugin
 
-This repository contains the **Extra Placeholders** plugin for the [Caddy](https://caddyserver.com) server. This plugin provides additional placeholders that can be used for enhanced server-side information, such as system load averages, random numbers, Caddy version details, and system uptime.
+The **Extra Placeholders** plugin for [Caddy](https://caddyserver.com) adds a variety of additional placeholders, enabling more dynamic and context-aware configurations. Built to enhance request matchers and response handling, this plugin allows Caddy to utilize real-time system metrics such as load averages, system uptime, and current Caddy version. It also provides versatile random number generation and a comprehensive range of time-based placeholders, including ISO week data, and customizable time formatting.
+
+These placeholders unlock flexible, condition-driven logic within Caddy, letting configurations respond to server load, current time, or even random values. Whether used to influence routing decisions or enrich response data, this plugin empowers Caddy to meet specific operational needs by embedding live system insights directly into its configuration.
 
 ## Features
 
@@ -32,8 +34,6 @@ This plugin introduces new placeholders that can be used within Caddy configurat
 | `{extra.time.now.iso_year}`          | The ISO year corresponding to the current ISO week.   |
 | `{extra.time.now.custom}`            | Current time in a custom format, configurable via the `time_format_custom` directive. |
 |                                      | Note: All `extra.time.now.*` placeholders refer to the system's local timezone. |
-
-These placeholders can be used in Caddyfiles to provide dynamic content and system information in responses.
 
 ## Building
 
@@ -128,6 +128,45 @@ In this example:
 - If `{extra.rand.int}` is greater than 75, the request is redirected to **DuckDuckGo** ([https://www.duckduckgo.com](https://www.duckduckgo.com)).
 
 This example demonstrates how to use the random integer placeholder in combination with conditional expressions to create dynamic redirection rules.
+
+### Example: Time-Based Greeting
+
+The following example demonstrates how you can use conditional expressions with the `extra.time.now.hour` placeholder to greet users with a time-appropriate message:
+
+```caddyfile
+:8080 {
+    extra_placeholders
+
+    @morning {
+        expression `{extra.time.now.hour} >= 6 && {extra.time.now.hour} < 12`
+    }
+    @day {
+        expression `{extra.time.now.hour} >= 12 && {extra.time.now.hour} < 18`
+    }
+    @evening {
+        expression `{extra.time.now.hour} >= 18 && {extra.time.now.hour} < 22`
+    }
+    @night {
+        expression `{extra.time.now.hour} >= 22 || {extra.time.now.hour} < 6`
+    }
+
+    handle @morning {
+        respond "Good morning! And in case I don't see ya, good afternoon, good evening, and good night!"
+    }
+
+    handle @day {
+        respond "Good day!"
+    }
+
+    handle @evening {
+        respond "Good evening!"
+    }
+
+    handle @night {
+        respond "Good night!"
+    }
+}
+```
 
 ## License
 
