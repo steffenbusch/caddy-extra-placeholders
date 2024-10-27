@@ -10,8 +10,8 @@ This plugin introduces new placeholders that can be used within Caddy configurat
 
 | Placeholder                          | Description                                           |
 |--------------------------------------|-------------------------------------------------------|
-| `{extra.caddy.version.simple}`       | Simple version information of the Caddy server.       |
-| `{extra.caddy.version.full}`         | Full version information of the Caddy server.         |
+| `{extra.caddy.version.simple}`       | Simple version information of the Caddy server (e.g., v2.8.4). |
+| `{extra.caddy.version.full}`         | Full version information of the Caddy server (e.g., v2.8.4 h1:q3pe...k=). |
 | `{extra.rand.float}`                 | Random float value between 0.0 and 1.0.               |
 | `{extra.rand.int}`                   | Random integer value between the configured min and max (default is 0 to 100). |
 | `{extra.loadavg.1}`                  | System load average over the last 1 minute.           |

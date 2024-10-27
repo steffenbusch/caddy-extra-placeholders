@@ -31,8 +31,8 @@ const defaultTimeFormatCustom = "2006-01-02 15:04:05"
 //
 // Placeholder | Description
 // ------------|-------------
-// `{extra.caddy.version.simple}` | Simple version information of the Caddy server.
-// `{extra.caddy.version.full}` | Full version information of the Caddy server.
+// `{extra.caddy.version.simple}` | Simple version information of the Caddy server (e.g., v2.8.4).
+// `{extra.caddy.version.full}` | Full version information of the Caddy server (e.g., v2.8.4 h1:q3pe...k=).
 // `{extra.rand.float}` | Random float value between 0.0 and 1.0.
 // `{extra.rand.int}` | Random integer value between the configured min and max (default is 0 to 100).
 // `{extra.loadavg.1}` | System load average over the last 1 minute.
@@ -44,7 +44,7 @@ const defaultTimeFormatCustom = "2006-01-02 15:04:05"
 //
 // Placeholder | Description
 // ------------|-------------
-// `{extra.time.now.month}` | Current month as an integer (e.g., 10 for October).
+// `{extra.time.now.month}` | Current month as an integer (e.g., 5 for May).
 // `{extra.time.now.month_padded}` | Current month as a zero-padded string (e.g., "05" for May).
 // `{extra.time.now.day}` | Current day of the month as an integer.
 // `{extra.time.now.day_padded}` | Current day of the month as a zero-padded string.
@@ -65,7 +65,7 @@ const defaultTimeFormatCustom = "2006-01-02 15:04:05"
 //
 // Placeholder | Description
 // ------------|-------------
-// `{extra.time.now.utc.month}` | Current month in UTC as an integer (e.g., 10 for October).
+// `{extra.time.now.utc.month}` | Current month in UTC as an integer (e.g., 5 for May).
 // `{extra.time.now.utc.month_padded}` | Current month in UTC as a zero-padded string (e.g., "05" for May).
 // `{extra.time.now.utc.day}` | Current day of the month in UTC as an integer.
 // `{extra.time.now.utc.day_padded}` | Current day of the month in UTC as a zero-padded string.
