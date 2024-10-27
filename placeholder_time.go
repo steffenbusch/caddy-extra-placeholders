@@ -36,6 +36,9 @@ func (e ExtraPlaceholders) setTimePlaceholders(repl *caddy.Replacer, t time.Time
 	repl.Set(fmt.Sprintf("%s.timezone_offset", base), t.Format("-0700"))
 	repl.Set(fmt.Sprintf("%s.timezone_name", base), t.Format("MST"))
 
+	// Set the day of the week as an integer (Sunday = 0, Monday = 1, ..., Saturday = 6)
+	repl.Set(fmt.Sprintf("%s.weekday_int", base), int(t.Weekday()))
+
 	// Set ISO week and year components
 	isoYear, isoWeek := t.ISOWeek()
 	repl.Set(fmt.Sprintf("%s.iso_week", base), isoWeek)

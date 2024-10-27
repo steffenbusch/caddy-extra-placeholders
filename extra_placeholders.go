@@ -58,6 +58,7 @@ const defaultTimeFormatCustom = "2006-01-02 15:04:05"
 // `{extra.time.now.timezone_name}` | Current timezone abbreviation (e.g., CEST).
 // `{extra.time.now.iso_week}` | Current ISO week number of the year.
 // `{extra.time.now.iso_year}` | ISO year corresponding to the current ISO week.
+// `{extra.time.now.weekday_int}` | Current day of the week as an integer (Sunday = 0, Monday = 1, ..., Saturday = 6).
 // `{extra.time.now.custom}` | Current time in a custom format, configurable via the `time_format_custom` directive.
 //
 // UTC equivalents of the current time placeholders (with `.utc` added):
@@ -78,6 +79,7 @@ const defaultTimeFormatCustom = "2006-01-02 15:04:05"
 // `{extra.time.now.utc.timezone_name}` | UTC timezone abbreviation (always UTC).
 // `{extra.time.now.utc.iso_week}` | Current ISO week number of the year in UTC.
 // `{extra.time.now.utc.iso_year}` | ISO year corresponding to the current ISO week in UTC.
+// `{extra.time.now.utc.weekday_int}` | Current day of the week in UTC as an integer (Sunday = 0, Monday = 1, ..., Saturday = 6).
 // `{extra.time.now.utc.custom}` | Current UTC time in a custom format, configurable via the `time_format_custom` directive.
 type ExtraPlaceholders struct {
 	// RandIntMin defines the minimum value (inclusive) for the `{extra.rand.int}` placeholder.

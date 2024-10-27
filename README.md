@@ -35,10 +35,11 @@ These placeholders reflect the **server's local timezone**:
 | `{extra.time.now.minute_padded}`     | Current minute as a zero-padded string.               |
 | `{extra.time.now.second}`            | Current second as an integer.                         |
 | `{extra.time.now.second_padded}`     | Current second as a zero-padded string.               |
-| `{extra.time.now.timezone_offset}`   | The current timezone offset from UTC (e.g., +0200).   |
-| `{extra.time.now.timezone_name}`     | The current timezone abbreviation (e.g., CEST).       |
-| `{extra.time.now.iso_week}`          | The current ISO week number of the year.              |
-| `{extra.time.now.iso_year}`          | The ISO year corresponding to the current ISO week.   |
+| `{extra.time.now.timezone_offset}`   | Current timezone offset from UTC (e.g., +0200).       |
+| `{extra.time.now.timezone_name}`     | Current timezone abbreviation (e.g., CEST).           |
+| `{extra.time.now.iso_week}`          | Current ISO week number of the year.                  |
+| `{extra.time.now.iso_year}`          | ISO year corresponding to the current ISO week.       |
+| `{extra.time.now.weekday_int}`       | Current day of the week as an integer (Sunday = 0, Monday = 1, ..., Saturday = 6). |
 | `{extra.time.now.custom}`            | Current time in a custom format, configurable via the `time_format_custom` directive. |
 
 ### Current UTC Time Placeholders
@@ -58,9 +59,10 @@ These placeholders reflect **UTC time**:
 | `{extra.time.now.utc.second}`        | Current second in UTC as an integer.                  |
 | `{extra.time.now.utc.second_padded}` | Current second in UTC as a zero-padded string.        |
 | `{extra.time.now.utc.timezone_offset}` | UTC timezone offset (always +0000).                 |
-| `{extra.time.now.utc.timezone_name}` | UTC timezone abbreviation (always UTC).              |
+| `{extra.time.now.utc.timezone_name}` | UTC timezone abbreviation (always UTC).               |
 | `{extra.time.now.utc.iso_week}`      | Current ISO week number of the year in UTC.           |
 | `{extra.time.now.utc.iso_year}`      | ISO year corresponding to the current ISO week in UTC. |
+| `{extra.time.now.utc.weekday_int}`   | Current day of the week in UTC as an integer (Sunday = 0, Monday = 1, ..., Saturday = 6). |
 | `{extra.time.now.utc.custom}`        | Current UTC time in a custom format, configurable via the `time_format_custom` directive. |
 
 > [!NOTE]
