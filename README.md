@@ -127,6 +127,21 @@ extra_placeholders {
 
 If `time_format_custom` is not specified, it defaults to `"2006-01-02 15:04:05"`. This format will be applied to both `{extra.time.now.custom}` (server’s local timezone) and `{extra.time.now.utc.custom}` (UTC time) placeholders.
 
+#### Placeholder Support within `time_format_custom`
+
+You can also specify placeholders within `time_format_custom`. For example, if you want the format to depend on an environment variable or request data, use `{env.*}` or `{http.request.*}` placeholders:
+
+```caddyfile
+extra_placeholders {
+    time_format_custom {http.request.uri.query.format}
+}
+```
+
+In this example, if a request contains a query parameter like `?format=02.01.2006`, the `{http.request.uri.query.format}` placeholder will dynamically resolve to `02.01.2006` for that specific request, which then sets the date format for `{extra.time.now.custom}`. This feature allows you to adjust time formatting based on user input, query parameters, or environment variables, creating a context-sensitive custom format.
+
+> [!NOTE]
+> When using placeholders in `time_format_custom`, ensure that the placeholder content aligns with [Go's time format syntax](https://pkg.go.dev/time#pkg-constants) to avoid formatting issues.
+
 ### Example: Conditional Redirect Based on Random Value
 
 The following example demonstrates how you can use conditional expressions with the random integer placeholder to redirect users to different search engines based on the generated random number:

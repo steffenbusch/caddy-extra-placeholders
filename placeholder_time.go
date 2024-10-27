@@ -16,6 +16,10 @@ func (e ExtraPlaceholders) setTimePlaceholders(repl *caddy.Replacer, t time.Time
 		base += ".utc"
 	}
 
+	// Placeholder support
+	// Dynamically resolve the time format using the replacer
+	timeFormatCustom := repl.ReplaceAll(e.TimeFormatCustom, defaultTimeFormatCustom)
+
 	// Set date and time components with the specified base path
 	repl.Set(fmt.Sprintf("%s.month", base), int(t.Month()))
 	repl.Set(fmt.Sprintf("%s.month_padded", base), fmt.Sprintf("%02d", t.Month()))
@@ -38,5 +42,5 @@ func (e ExtraPlaceholders) setTimePlaceholders(repl *caddy.Replacer, t time.Time
 	repl.Set(fmt.Sprintf("%s.iso_year", base), isoYear)
 
 	// Set custom time format placeholder
-	repl.Set(fmt.Sprintf("%s.custom", base), t.Format(e.TimeFormatCustom))
+	repl.Set(fmt.Sprintf("%s.custom", base), t.Format(timeFormatCustom))
 }

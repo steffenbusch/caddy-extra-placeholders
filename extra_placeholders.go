@@ -24,6 +24,9 @@ import (
 	"go.uber.org/zap"
 )
 
+// defaultTimeFormatCustom is the fallback format used if no custom format is specified for the custom time placeholders.
+const defaultTimeFormatCustom = "2006-01-02 15:04:05"
+
 // ExtraPlaceholders provides additional placeholders that can be used within Caddy configurations:
 //
 // Placeholder | Description
@@ -107,7 +110,7 @@ func (e *ExtraPlaceholders) Provision(ctx caddy.Context) error {
 		e.RandIntMax = 100
 	}
 	if e.TimeFormatCustom == "" {
-		e.TimeFormatCustom = "2006-01-02 15:04:05" // Default format for custom time placeholder
+		e.TimeFormatCustom = defaultTimeFormatCustom
 	}
 
 	// Log the chosen configuration values
