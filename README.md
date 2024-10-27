@@ -18,6 +18,13 @@ This plugin introduces new placeholders that can be used within Caddy configurat
 | `{extra.loadavg.5}`                  | System load average over the last 5 minutes.          |
 | `{extra.loadavg.15}`                 | System load average over the last 15 minutes.         |
 | `{extra.hostinfo.uptime}`            | System uptime in a human-readable format.             |
+
+### Current Server Local Time Placeholders
+
+These placeholders reflect the **server's local timezone**:
+
+| Placeholder                          | Description                                           |
+|--------------------------------------|-------------------------------------------------------|
 | `{extra.time.now.month}`             | Current month as an integer (e.g., 5 for May).        |
 | `{extra.time.now.month_padded}`      | Current month as a zero-padded string (e.g., "05" for May). |
 | `{extra.time.now.day}`               | Current day of the month as an integer.               |
@@ -33,7 +40,31 @@ This plugin introduces new placeholders that can be used within Caddy configurat
 | `{extra.time.now.iso_week}`          | The current ISO week number of the year.              |
 | `{extra.time.now.iso_year}`          | The ISO year corresponding to the current ISO week.   |
 | `{extra.time.now.custom}`            | Current time in a custom format, configurable via the `time_format_custom` directive. |
-|                                      | Note: All `extra.time.now.*` placeholders refer to the system's local timezone. |
+
+### Current UTC Time Placeholders
+
+These placeholders reflect **UTC time**:
+
+| Placeholder                          | Description                                           |
+|--------------------------------------|-------------------------------------------------------|
+| `{extra.time.now.utc.month}`         | Current month in UTC as an integer (e.g., 5 for May). |
+| `{extra.time.now.utc.month_padded}`  | Current month in UTC as a zero-padded string (e.g., "05" for May). |
+| `{extra.time.now.utc.day}`           | Current day of the month in UTC as an integer.        |
+| `{extra.time.now.utc.day_padded}`    | Current day of the month in UTC as a zero-padded string. |
+| `{extra.time.now.utc.hour}`          | Current hour in UTC in 24-hour format as an integer.  |
+| `{extra.time.now.utc.hour_padded}`   | Current hour in UTC in 24-hour format as a zero-padded string. |
+| `{extra.time.now.utc.minute}`        | Current minute in UTC as an integer.                  |
+| `{extra.time.now.utc.minute_padded}` | Current minute in UTC as a zero-padded string.        |
+| `{extra.time.now.utc.second}`        | Current second in UTC as an integer.                  |
+| `{extra.time.now.utc.second_padded}` | Current second in UTC as a zero-padded string.        |
+| `{extra.time.now.utc.timezone_offset}` | UTC timezone offset (always +0000).                 |
+| `{extra.time.now.utc.timezone_name}` | UTC timezone abbreviation (always UTC).              |
+| `{extra.time.now.utc.iso_week}`      | Current ISO week number of the year in UTC.           |
+| `{extra.time.now.utc.iso_year}`      | ISO year corresponding to the current ISO week in UTC. |
+| `{extra.time.now.utc.custom}`        | Current UTC time in a custom format, configurable via the `time_format_custom` directive. |
+
+> [!NOTE]
+> All `extra.time.now.*` placeholders refer to the system's local timezone, while `extra.time.now.utc.*` placeholders represent the same values in UTC.
 
 ## Building
 
@@ -84,7 +115,7 @@ This means that `{extra.rand.int}` will default to generating a random integer b
 
 ### Custom Time Format
 
-The `{extra.time.now.custom}` placeholder can be configured using the `time_format_custom` subdirective inside the `extra_placeholders` directive.
+The `{extra.time.now.custom}` and `{extra.time.now.utc.custom}` placeholders can be configured using the `time_format_custom` subdirective inside the `extra_placeholders` directive.
 This allows you to specify a custom date and time format using [Go's time format syntax](https://pkg.go.dev/time#pkg-constants).
 
 ```caddyfile
@@ -94,7 +125,7 @@ extra_placeholders {
 }
 ```
 
-If `time_format_custom` is not specified, it defaults to `"2006-01-02 15:04:05"`. This format will be used whenever `{extra.time.now.custom}` is referenced.
+If `time_format_custom` is not specified, it defaults to `"2006-01-02 15:04:05"`. This format will be applied to both `{extra.time.now.custom}` (server’s local timezone) and `{extra.time.now.utc.custom}` (UTC time) placeholders.
 
 ### Example: Conditional Redirect Based on Random Value
 

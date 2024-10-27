@@ -16,14 +16,11 @@ package extraplaceholders
 
 import (
 	"fmt"
-	"math/rand"
 	"net/http"
 	"time"
 
 	"github.com/caddyserver/caddy/v2"
 	"github.com/caddyserver/caddy/v2/modules/caddyhttp"
-	"github.com/shirou/gopsutil/v4/host"
-	"github.com/shirou/gopsutil/v4/load"
 	"go.uber.org/zap"
 )
 
@@ -39,6 +36,10 @@ import (
 // `{extra.loadavg.5}` | System load average over the last 5 minutes.
 // `{extra.loadavg.15}` | System load average over the last 15 minutes.
 // `{extra.hostinfo.uptime}` | System uptime in a human-readable format.
+//
+// Current local time placeholders:
+// Placeholder | Description
+// ------------|-------------
 // `{extra.time.now.month}` | Current month as an integer (e.g., 10 for October).
 // `{extra.time.now.month_padded}` | Current month as a zero-padded string (e.g., "05" for May).
 // `{extra.time.now.day}` | Current day of the month as an integer.
@@ -54,6 +55,25 @@ import (
 // `{extra.time.now.iso_week}` | Current ISO week number of the year.
 // `{extra.time.now.iso_year}` | ISO year corresponding to the current ISO week.
 // `{extra.time.now.custom}` | Current time in a custom format, configurable via the `time_format_custom` directive.
+//
+// UTC equivalents of the current time placeholders (with `.utc` added):
+// Placeholder | Description
+// ------------|-------------
+// `{extra.time.now.utc.month}` | Current month in UTC as an integer (e.g., 10 for October).
+// `{extra.time.now.utc.month_padded}` | Current month in UTC as a zero-padded string (e.g., "05" for May).
+// `{extra.time.now.utc.day}` | Current day of the month in UTC as an integer.
+// `{extra.time.now.utc.day_padded}` | Current day of the month in UTC as a zero-padded string.
+// `{extra.time.now.utc.hour}` | Current hour in UTC in 24-hour format as an integer.
+// `{extra.time.now.utc.hour_padded}` | Current hour in UTC in 24-hour format as a zero-padded string.
+// `{extra.time.now.utc.minute}` | Current minute in UTC as an integer.
+// `{extra.time.now.utc.minute_padded}` | Current minute in UTC as a zero-padded string.
+// `{extra.time.now.utc.second}` | Current second in UTC as an integer.
+// `{extra.time.now.utc.second_padded}` | Current second in UTC as a zero-padded string.
+// `{extra.time.now.utc.timezone_offset}` | UTC timezone offset (always +0000).
+// `{extra.time.now.utc.timezone_name}` | UTC timezone abbreviation (always UTC).
+// `{extra.time.now.utc.iso_week}` | Current ISO week number of the year in UTC.
+// `{extra.time.now.utc.iso_year}` | ISO year corresponding to the current ISO week in UTC.
+// `{extra.time.now.utc.custom}` | Current UTC time in a custom format, configurable via the `time_format_custom` directive.
 type ExtraPlaceholders struct {
 	// RandIntMin defines the minimum value (inclusive) for the `{extra.rand.int}` placeholder.
 	RandIntMin int `json:"rand_int_min,omitempty"`
@@ -61,7 +81,7 @@ type ExtraPlaceholders struct {
 	// RandIntMax defines the maximum value (inclusive) for the `{extra.rand.int}` placeholder.
 	RandIntMax int `json:"rand_int_max,omitempty"`
 
-	// TimeFormatCustom specifies a custom time format for the `{extra.time.now.custom}` placeholder.
+	// TimeFormatCustom specifies a custom time format for the `{extra.time.now.custom}` and `{extra.time.now.utc.custom}` placeholder.
 	// If left empty, a default format of "2006-01-02 15:04:05" is used.
 	TimeFormatCustom string `json:"time_format_custom,omitempty"`
 
@@ -116,60 +136,16 @@ func (e ExtraPlaceholders) ServeHTTP(w http.ResponseWriter, r *http.Request, nex
 		return caddyhttp.Error(http.StatusInternalServerError, nil)
 	}
 
-	// Set Caddy version placeholders.
-	simpleVersion, fullVersion := caddy.Version()
-	repl.Set("extra.caddy.version.simple", simpleVersion)
-	repl.Set("extra.caddy.version.full", fullVersion)
+	e.setCaddyPlaceholders(repl)
+	e.setRandPlaceholders(repl)
+	e.setLoadavgPlaceholders(repl)
+	e.setHostinfoPlaceholders(repl)
 
-	// Set placeholders for random float and integer values.
-	repl.Set("extra.rand.float", rand.Float64())
-	if e.RandIntMax > e.RandIntMin {
-		repl.Set("extra.rand.int", rand.Intn(e.RandIntMax-e.RandIntMin+1)+e.RandIntMin)
-	} else {
-		repl.Set("extra.rand.int", rand.Intn(101)) // Default range 0-100 if not properly configured
-	}
+	// Set time placeholders for server's local time
+	e.setTimePlaceholders(repl, time.Now(), false)
 
-	// Set placeholders for system load averages (1, 5, and 15 minutes).
-	loadAvg, err := load.Avg()
-	if err == nil {
-		repl.Set("extra.loadavg.1", loadAvg.Load1)
-		repl.Set("extra.loadavg.5", loadAvg.Load5)
-		repl.Set("extra.loadavg.15", loadAvg.Load15)
-	}
-
-	// Set placeholder for system uptime.
-	uptime, err := host.Uptime()
-	if err == nil {
-		uptimeDuration := time.Duration(uptime) * time.Second
-		repl.Set("extra.hostinfo.uptime", uptimeDuration.String())
-	} else {
-		repl.Set("extra.hostinfo.uptime", "error retrieving uptime")
-	}
-
-	// Set placeholders for current time (month, day, hour, minute, second).
-	now := time.Now() // System's local timezone
-	repl.Set("extra.time.now.month", int(now.Month()))
-	repl.Set("extra.time.now.month_padded", fmt.Sprintf("%02d", now.Month()))
-	repl.Set("extra.time.now.day", now.Day())
-	repl.Set("extra.time.now.day_padded", fmt.Sprintf("%02d", now.Day()))
-	repl.Set("extra.time.now.hour", now.Hour())
-	repl.Set("extra.time.now.hour_padded", fmt.Sprintf("%02d", now.Hour()))
-	repl.Set("extra.time.now.minute", now.Minute())
-	repl.Set("extra.time.now.minute_padded", fmt.Sprintf("%02d", now.Minute()))
-	repl.Set("extra.time.now.second", now.Second())
-	repl.Set("extra.time.now.second_padded", fmt.Sprintf("%02d", now.Second()))
-
-	// Set placeholders for timezone offset and name.
-	repl.Set("extra.time.now.timezone_offset", now.Format("-0700"))
-	repl.Set("extra.time.now.timezone_name", now.Format("MST"))
-
-	// Set placeholders for ISO week and ISO year.
-	isoYear, isoWeek := now.ISOWeek()
-	repl.Set("extra.time.now.iso_week", isoWeek)
-	repl.Set("extra.time.now.iso_year", isoYear)
-
-	// Set custom time format placeholder
-	repl.Set("extra.time.now.custom", now.Format(e.TimeFormatCustom))
+	// Set time placeholders for UTC time
+	e.setTimePlaceholders(repl, time.Now().UTC(), true)
 
 	// Call the next handler in the chain.
 	return next.ServeHTTP(w, r)
