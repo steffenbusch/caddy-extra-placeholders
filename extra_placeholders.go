@@ -55,7 +55,7 @@ import (
 // `{extra.time.now.iso_year}` | ISO year corresponding to the current ISO week.
 // `{extra.time.now.custom}` | Current time in a custom format, configurable via the `time_format_custom` directive.
 type ExtraPlaceholders struct {
-	// RandIntMax defines the maximum value (inclusive) for the `{extra.rand.int}` placeholder.
+	// RandIntMin defines the minimum value (inclusive) for the `{extra.rand.int}` placeholder.
 	RandIntMin int `json:"rand_int_min,omitempty"`
 
 	// RandIntMax defines the maximum value (inclusive) for the `{extra.rand.int}` placeholder.
