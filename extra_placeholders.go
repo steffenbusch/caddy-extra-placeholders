@@ -41,6 +41,7 @@ const defaultTimeFormatCustom = "2006-01-02 15:04:05"
 // `{extra.hostinfo.uptime}` | System uptime in a human-readable format.
 //
 // Current local time placeholders:
+//
 // Placeholder | Description
 // ------------|-------------
 // `{extra.time.now.month}` | Current month as an integer (e.g., 10 for October).
@@ -60,6 +61,7 @@ const defaultTimeFormatCustom = "2006-01-02 15:04:05"
 // `{extra.time.now.custom}` | Current time in a custom format, configurable via the `time_format_custom` directive.
 //
 // UTC equivalents of the current time placeholders (with `.utc` added):
+//
 // Placeholder | Description
 // ------------|-------------
 // `{extra.time.now.utc.month}` | Current month in UTC as an integer (e.g., 10 for October).
