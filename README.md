@@ -4,6 +4,8 @@ The **Extra Placeholders** plugin for [Caddy](https://caddyserver.com) adds a va
 
 These placeholders unlock flexible, condition-driven logic within Caddy, letting configurations respond to server load, current time, or even random values. Whether used to influence routing decisions or enrich response data, this plugin empowers Caddy to meet specific operational needs by embedding live system insights directly into its configuration.
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/steffenbusch/caddy-extra-placeholders)](https://goreportcard.com/report/github.com/steffenbusch/caddy-extra-placeholders)
+
 ## Features
 
 This plugin introduces new placeholders that can be used within Caddy configurations:
