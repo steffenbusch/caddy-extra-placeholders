@@ -156,16 +156,16 @@ The following example demonstrates how you can use conditional expressions with 
         rand_int 1 100
     }
 
-    @redirectToGoogle expression `{extra.rand.int} <= 25`
+    @redirectToGoogle `{extra.rand.int} <= 25`
     redir @redirectToGoogle https://www.google.com
 
-    @redirectToBing expression `{extra.rand.int} > 25 && {extra.rand.int} <= 50`
+    @redirectToBing `{extra.rand.int} > 25 && {extra.rand.int} <= 50`
     redir @redirectToBing https://www.bing.com
 
-    @redirectToYahoo expression `{extra.rand.int} > 50 && {extra.rand.int} <= 75`
+    @redirectToYahoo `{extra.rand.int} > 50 && {extra.rand.int} <= 75`
     redir @redirectToYahoo https://www.yahoo.com
 
-    @redirectToDuckDuckGo expression `{extra.rand.int} > 75`
+    @redirectToDuckDuckGo `{extra.rand.int} > 75`
     redir @redirectToDuckDuckGo https://www.duckduckgo.com
 }
 ```
@@ -178,6 +178,9 @@ In this example:
 - If `{extra.rand.int}` is greater than 75, the request is redirected to **DuckDuckGo** ([https://www.duckduckgo.com](https://www.duckduckgo.com)).
 
 This example demonstrates how to use the random integer placeholder in combination with conditional expressions to create dynamic redirection rules.
+
+> [!NOTE]
+> If the first argument of a named matcher starts with a quoted token, it is automatically treated as an expression, making the `expression` keyword unnecessary.
 
 ### Example: Time-Based Greeting
 
