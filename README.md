@@ -148,39 +148,40 @@ In this example, if a request contains a query parameter like `?format=02.01.200
 
 ### Example: Conditional Redirect Based on Random Value
 
-The following example demonstrates how you can use conditional expressions with the random integer placeholder to redirect users to different search engines based on the generated random number:
+The following example demonstrates how you can use the [`map`](https://caddyserver.com/docs/caddyfile/directives/map) directive with the random integer placeholder to redirect users to different search engines based on the generated random number.
+It also includes a response header to display the generated random integer, which can be useful for debugging purposes.
 
 ```caddyfile
+{
+    order extra_placeholders before header
+}
+
 :8080 {
     extra_placeholders {
-        rand_int 1 100
+        # Generate a random integer between 1 and 4, stored in {extra.rand.int},
+        # matching the ranges defined in the "map" directive below
+        rand_int 1 4
     }
 
-    @redirectToGoogle `{extra.rand.int} <= 25`
-    redir @redirectToGoogle https://www.google.com
+    # Add the random integer as a response header
+    header X-Random-Int {extra.rand.int}
 
-    @redirectToBing `{extra.rand.int} > 25 && {extra.rand.int} <= 50`
-    redir @redirectToBing https://www.bing.com
+    # Map the random integer value to the redirection target
+    map {extra.rand.int} {redir_target} {
+        1 https://www.google.com
+        2 https://www.bing.com
+        3 https://www.yahoo.com
+        4 https://www.duckduckgo.com
+    }
 
-    @redirectToYahoo `{extra.rand.int} > 50 && {extra.rand.int} <= 75`
-    redir @redirectToYahoo https://www.yahoo.com
-
-    @redirectToDuckDuckGo `{extra.rand.int} > 75`
-    redir @redirectToDuckDuckGo https://www.duckduckgo.com
+    # Redirect to the mapped target
+    redir {redir_target}
 }
 ```
 
-In this example:
-
-- If `{extra.rand.int}` is between 1 and 25, the request is redirected to **Google** ([https://www.google.com](https://www.google.com)).
-- If `{extra.rand.int}` is between 26 and 50, the request is redirected to **Bing** ([https://www.bing.com](https://www.bing.com)).
-- If `{extra.rand.int}` is between 51 and 75, the request is redirected to **Yahoo** ([https://www.yahoo.com](https://www.yahoo.com)).
-- If `{extra.rand.int}` is greater than 75, the request is redirected to **DuckDuckGo** ([https://www.duckduckgo.com](https://www.duckduckgo.com)).
-
-This example demonstrates how to use the random integer placeholder in combination with conditional expressions to create dynamic redirection rules.
-
 > [!NOTE]
-> If the first argument of a named matcher starts with a quoted token, it is automatically treated as an expression, making the `expression` keyword unnecessary.
+> In this example, the global `order` directive is used to overwrite the default directive order of the `extra_placeholders` directive, which is ordered before `redir` in the Caddyfile.
+> The `header` directive is processed even earlier than `redir` in the directive sorting order. To ensure that the `header` directive has the necessary placeholder values for processing, the `extra_placeholders` directive must be evaluated before `header`
 
 ### Example: Time-Based Greeting
 
@@ -212,6 +213,9 @@ The following example demonstrates how you can use conditional expressions with 
     }
 }
 ```
+
+> [!NOTE]
+> If the first argument of a named matcher starts with a quoted token, it is automatically treated as an expression, making the `expression` keyword unnecessary.
 
 ## License
 
