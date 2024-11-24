@@ -156,16 +156,16 @@ The following example demonstrates how you can use conditional expressions with 
         rand_int 1 100
     }
 
-    @redirectToGoogle expression `{extra.rand.int} <= 25`
+    @redirectToGoogle `{extra.rand.int} <= 25`
     redir @redirectToGoogle https://www.google.com
 
-    @redirectToBing expression `{extra.rand.int} > 25 && {extra.rand.int} <= 50`
+    @redirectToBing `{extra.rand.int} > 25 && {extra.rand.int} <= 50`
     redir @redirectToBing https://www.bing.com
 
-    @redirectToYahoo expression `{extra.rand.int} > 50 && {extra.rand.int} <= 75`
+    @redirectToYahoo `{extra.rand.int} > 50 && {extra.rand.int} <= 75`
     redir @redirectToYahoo https://www.yahoo.com
 
-    @redirectToDuckDuckGo expression `{extra.rand.int} > 75`
+    @redirectToDuckDuckGo `{extra.rand.int} > 75`
     redir @redirectToDuckDuckGo https://www.duckduckgo.com
 }
 ```
@@ -179,6 +179,9 @@ In this example:
 
 This example demonstrates how to use the random integer placeholder in combination with conditional expressions to create dynamic redirection rules.
 
+> [!NOTE]
+> If the first argument of a named matcher starts with a quoted token, it is automatically treated as an expression, making the `expression` keyword unnecessary.
+
 ### Example: Time-Based Greeting
 
 The following example demonstrates how you can use conditional expressions with the `extra.time.now.hour` placeholder to greet users with a time-appropriate message:
@@ -187,18 +190,10 @@ The following example demonstrates how you can use conditional expressions with 
 :8080 {
     extra_placeholders
 
-    @morning {
-        expression `{extra.time.now.hour} >= 6 && {extra.time.now.hour} < 12`
-    }
-    @day {
-        expression `{extra.time.now.hour} >= 12 && {extra.time.now.hour} < 18`
-    }
-    @evening {
-        expression `{extra.time.now.hour} >= 18 && {extra.time.now.hour} < 22`
-    }
-    @night {
-        expression `{extra.time.now.hour} >= 22 || {extra.time.now.hour} < 6`
-    }
+    @morning `{extra.time.now.hour} >= 6 && {extra.time.now.hour} <12`
+    @day `{extra.time.now.hour} >= 12 && {extra.time.now.hour} <18`
+    @evening `{extra.time.now.hour} >= 18 && {extra.time.now.hour} <22`
+    @night `{extra.time.now.hour} >= 22 || {extra.time.now.hour} <6`
 
     handle @morning {
         respond "Good morning! And in case I don't see ya, good afternoon, good evening, and good night!"
