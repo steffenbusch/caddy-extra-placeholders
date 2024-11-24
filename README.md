@@ -190,18 +190,10 @@ The following example demonstrates how you can use conditional expressions with 
 :8080 {
     extra_placeholders
 
-    @morning {
-        expression `{extra.time.now.hour} >= 6 && {extra.time.now.hour} < 12`
-    }
-    @day {
-        expression `{extra.time.now.hour} >= 12 && {extra.time.now.hour} < 18`
-    }
-    @evening {
-        expression `{extra.time.now.hour} >= 18 && {extra.time.now.hour} < 22`
-    }
-    @night {
-        expression `{extra.time.now.hour} >= 22 || {extra.time.now.hour} < 6`
-    }
+    @morning `{extra.time.now.hour} >= 6 && {extra.time.now.hour} <12`
+    @day `{extra.time.now.hour} >= 12 && {extra.time.now.hour} <18`
+    @evening `{extra.time.now.hour} >= 18 && {extra.time.now.hour} <22`
+    @night `{extra.time.now.hour} >= 22 || {extra.time.now.hour} <6`
 
     handle @morning {
         respond "Good morning! And in case I don't see ya, good afternoon, good evening, and good night!"
