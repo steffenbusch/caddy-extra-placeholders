@@ -20,6 +20,7 @@ This plugin introduces new placeholders that can be used within Caddy configurat
 | `{extra.loadavg.5}`                  | System load average over the last 5 minutes.          |
 | `{extra.loadavg.15}`                 | System load average over the last 15 minutes.         |
 | `{extra.hostinfo.uptime}`            | System uptime in a human-readable format.             |
+| `{extra.newline}`                    | Newline character (\n).                               |
 
 ### Current Server Local Time Placeholders
 
@@ -91,7 +92,7 @@ To use the extra placeholders, you can add the following directive to your Caddy
         rand_int 10 50
     }
 
-    respond "Caddy Version: {extra.caddy.version.full}, Uptime: {extra.hostinfo.uptime}, Random Int: {extra.rand.int}"
+    respond "Caddy Version: {extra.caddy.version.full}, Uptime: {extra.hostinfo.uptime}, Random Int: {extra.rand.int}{extra.newline}"
 }
 ```
 
