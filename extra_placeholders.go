@@ -39,6 +39,7 @@ const defaultTimeFormatCustom = "2006-01-02 15:04:05"
 // `{extra.loadavg.5}` | System load average over the last 5 minutes.
 // `{extra.loadavg.15}` | System load average over the last 15 minutes.
 // `{extra.hostinfo.uptime}` | System uptime in a human-readable format.
+// `{extra.newline}` | Newline character (\n).
 //
 // Current local time placeholders:
 //
@@ -153,6 +154,9 @@ func (e ExtraPlaceholders) ServeHTTP(w http.ResponseWriter, r *http.Request, nex
 
 	// Set time placeholders for UTC time
 	e.setTimePlaceholders(repl, time.Now().UTC(), true)
+
+	// Set newline placeholder
+	repl.Set("extra.newline", "\n")
 
 	// Call the next handler in the chain.
 	return next.ServeHTTP(w, r)

@@ -20,6 +20,7 @@ This plugin introduces new placeholders that can be used within Caddy configurat
 | `{extra.loadavg.5}`                  | System load average over the last 5 minutes.          |
 | `{extra.loadavg.15}`                 | System load average over the last 15 minutes.         |
 | `{extra.hostinfo.uptime}`            | System uptime in a human-readable format.             |
+| `{extra.newline}`                    | Newline character (\n).                               |
 
 ### Current Server Local Time Placeholders
 
@@ -91,11 +92,13 @@ To use the extra placeholders, you can add the following directive to your Caddy
         rand_int 10 50
     }
 
-    respond "Caddy Version: {extra.caddy.version.full}, Uptime: {extra.hostinfo.uptime}, Random Int: {extra.rand.int}"
+    respond "Caddy Version: {extra.caddy.version.full}, Uptime: {extra.hostinfo.uptime}, Random Int: {extra.rand.int}{extra.newline}"
 }
 ```
 
 This example demonstrates how to use the additional placeholders provided by this plugin to dynamically insert Caddy version information, system uptime, and a random integer between 10 and 50 into an HTTP response.
+
+Using `{extra.newline}` at the end of the `respond` directive inserts a newline character. While it's possible to directly enter a newline in the Caddyfile, where the closing `"` would then be on a new line, inputting `"\n"` would not work as expected — it would be used literally in the response instead of as a newline. The `{extra.newline}` placeholder offers a clearer and more readable alternative for inserting actual newline characters.
 
 ### Random Integer Configuration
 
