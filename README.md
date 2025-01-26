@@ -98,6 +98,8 @@ To use the extra placeholders, you can add the following directive to your Caddy
 
 This example demonstrates how to use the additional placeholders provided by this plugin to dynamically insert Caddy version information, system uptime, and a random integer between 10 and 50 into an HTTP response.
 
+Using `{extra.newline}` at the end of the `respond` directive inserts a newline character. While it's possible to directly enter a newline in the Caddyfile, where the closing `"` would then be on a new line, inputting `"\n"` would not work as expected — it would be used literally in the response instead of as a newline. The `{extra.newline}` placeholder offers a clearer and more readable alternative for inserting actual newline characters.
+
 ### Random Integer Configuration
 
 To configure the range for the `{extra.rand.int}` placeholder, use the `rand_int` subdirective inside the `extra_placeholders` directive. The format is:
