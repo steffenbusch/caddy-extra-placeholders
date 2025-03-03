@@ -90,7 +90,6 @@ To use the extra placeholders, you can add the following directive to your Caddy
 :8080 {
     extra_placeholders {
         rand_int 10 50
-        disable_loadavg_placeholders
     }
 
     respond "Caddy Version: {extra.caddy.version.full}, Uptime: {extra.hostinfo.uptime}, Random Int: {extra.rand.int}{extra.newline}"
