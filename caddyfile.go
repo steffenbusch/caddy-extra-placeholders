@@ -62,6 +62,8 @@ func (e *ExtraPlaceholders) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 			} else {
 				return d.ArgErr()
 			}
+		case "disable_loadavg_placeholders":
+			e.DisableLoadavgPlaceholders = true
 		default:
 			// Handle unknown subdirective with an error message
 			return d.Errf("unknown subdirective: %s", d.Val())
