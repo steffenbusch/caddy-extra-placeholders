@@ -93,6 +93,9 @@ type ExtraPlaceholders struct {
 	// If left empty, a default format of "2006-01-02 15:04:05" is used.
 	TimeFormatCustom string `json:"time_format_custom,omitempty"`
 
+	// DisableLoadavgPlaceholders determines whether to disable setting load average placeholders.
+	DisableLoadavgPlaceholders bool `json:"disable_loadavg_placeholders,omitempty"`
+
 	// logger provides structured logging for the plugin's internal operations.
 	logger *zap.Logger
 }
@@ -123,6 +126,7 @@ func (e *ExtraPlaceholders) Provision(ctx caddy.Context) error {
 		zap.Int("RandIntMin", e.RandIntMin),
 		zap.Int("RandIntMax", e.RandIntMax),
 		zap.String("TimeFormatCustom", e.TimeFormatCustom),
+		zap.Bool("DisableLoadavgPlaceholders", e.DisableLoadavgPlaceholders),
 	)
 
 	return nil
@@ -146,7 +150,9 @@ func (e ExtraPlaceholders) ServeHTTP(w http.ResponseWriter, r *http.Request, nex
 
 	e.setCaddyPlaceholders(repl)
 	e.setRandPlaceholders(repl)
-	e.setLoadavgPlaceholders(repl)
+	if !e.DisableLoadavgPlaceholders {
+		e.setLoadavgPlaceholders(repl)
+	}
 	e.setHostinfoPlaceholders(repl)
 
 	// Set time placeholders for server's local time

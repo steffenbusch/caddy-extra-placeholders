@@ -149,6 +149,16 @@ In this example, if a request contains a query parameter like `?format=02.01.200
 > [!NOTE]
 > When using placeholders in `time_format_custom`, ensure that the placeholder content aligns with [Go's time format syntax](https://pkg.go.dev/time#pkg-constants) to avoid formatting issues.
 
+### Disable Load Average Placeholders
+
+To disable the load average placeholders (`{extra.loadavg.1}`, `{extra.loadavg.5}`, `{extra.loadavg.15}`), use the `disable_loadavg_placeholders` subdirective inside the `extra_placeholders` directive. When this option is present in the Caddyfile configuration, the load average placeholders will not be gathered and will not be available.
+
+```caddyfile
+extra_placeholders {
+    disable_loadavg_placeholders
+}
+```
+
 ### Example: Conditional Redirect Based on Random Value
 
 The following example demonstrates how you can use the [`map`](https://caddyserver.com/docs/caddyfile/directives/map) directive with the random integer placeholder to redirect users to different search engines based on the generated random number.
