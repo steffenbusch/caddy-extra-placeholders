@@ -1,7 +1,8 @@
 module github.com/steffenbusch/caddy-extra-placeholders
 
-go 1.22.3
-toolchain go1.23.7
+go 1.23.0
+
+toolchain go1.24.1
 
 require (
 	github.com/caddyserver/caddy/v2 v2.9.1
