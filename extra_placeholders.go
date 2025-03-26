@@ -17,6 +17,7 @@ package extraplaceholders
 import (
 	"fmt"
 	"net/http"
+	"net/url"
 	"time"
 
 	"github.com/caddyserver/caddy/v2"
@@ -40,6 +41,7 @@ const defaultTimeFormatCustom = "2006-01-02 15:04:05"
 // `{extra.loadavg.15}` | System load average over the last 15 minutes.
 // `{extra.hostinfo.uptime}` | System uptime in a human-readable format.
 // `{extra.newline}` | Newline character (\n).
+// `{extra.http.request.url.query_escaped}` | The full URL of the HTTP request in query-escaped form, safe for use in query strings.
 //
 // Current local time placeholders:
 //
@@ -164,8 +166,22 @@ func (e ExtraPlaceholders) ServeHTTP(w http.ResponseWriter, r *http.Request, nex
 	// Set newline placeholder
 	repl.Set("extra.newline", "\n")
 
+	// Set HTTP request-related placeholders
+	e.setHTTPRequestURLPlaceholders(repl, r)
+
 	// Call the next handler in the chain.
 	return next.ServeHTTP(w, r)
+}
+
+// setHTTPRequestURLPlaceholders sets placeholders related to the HTTP request, such as the full URL in query-escaped form.
+func (e ExtraPlaceholders) setHTTPRequestURLPlaceholders(repl *caddy.Replacer, r *http.Request) {
+	scheme := "http"
+	if r.TLS != nil {
+		scheme = "https"
+	}
+	fullURL := fmt.Sprintf("%s://%s%s", scheme, r.Host, r.URL.Redacted())
+	queryEscapedURL := url.QueryEscape(fullURL)
+	repl.Set("extra.http.request.url.query_escaped", queryEscapedURL)
 }
 
 // Interface guards to ensure ExtraPlaceholders implements the necessary interfaces.

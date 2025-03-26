@@ -21,6 +21,7 @@ This plugin introduces new placeholders that can be used within Caddy configurat
 | `{extra.loadavg.15}`                 | System load average over the last 15 minutes.         |
 | `{extra.hostinfo.uptime}`            | System uptime in a human-readable format.             |
 | `{extra.newline}`                    | Newline character (\n).                               |
+| `{extra.http.request.url.query_escaped}` | The full URL of the HTTP request in query-escaped form, safe for use in query strings. |
 
 ### Current Server Local Time Placeholders
 
