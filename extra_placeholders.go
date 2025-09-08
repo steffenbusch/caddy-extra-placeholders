@@ -42,6 +42,8 @@ const defaultTimeFormatCustom = "2006-01-02 15:04:05"
 // `{extra.hostinfo.uptime}` | System uptime in a human-readable format.
 // `{extra.newline}` | Newline character (\n).
 // `{extra.http.request.url.query_escaped}` | The full URL of the HTTP request in query-escaped form, safe for use in query strings.
+// `{extra.go.runtime.version}` | Go runtime version (e.g., go1.25.1).
+// `{extra.go.runtime.numgoroutines}` | Number of currently existing Go goroutines.
 //
 // Current local time placeholders:
 //
@@ -168,6 +170,9 @@ func (e ExtraPlaceholders) ServeHTTP(w http.ResponseWriter, r *http.Request, nex
 
 	// Set HTTP request-related placeholders
 	e.setHTTPRequestURLPlaceholders(repl, r)
+
+	// Set Go runtime-related placeholders
+	e.setGoPlaceholders(repl)
 
 	// Call the next handler in the chain.
 	return next.ServeHTTP(w, r)

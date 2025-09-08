@@ -22,6 +22,8 @@ This plugin introduces new placeholders that can be used within Caddy configurat
 | `{extra.hostinfo.uptime}`            | System uptime in a human-readable format.             |
 | `{extra.newline}`                    | Newline character (\n).                               |
 | `{extra.http.request.url.query_escaped}` | The full URL of the HTTP request in query-escaped form, safe for use in query strings. |
+| `{extra.go.runtime.version}`         | Go runtime version (e.g., go1.25.1).                  |
+| `{extra.go.runtime.numgoroutines}`   | Number of currently existing Go goroutines.           |
 
 ### Current Server Local Time Placeholders
 
