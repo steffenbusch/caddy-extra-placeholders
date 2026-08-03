@@ -19,9 +19,11 @@ import (
 	"github.com/shirou/gopsutil/v4/load"
 )
 
+var loadAvgFunc = load.Avg
+
 // setLoadavgPlaceholders sets placeholders for system load averages (1, 5, and 15 minutes).
 func (e ExtraPlaceholders) setLoadavgPlaceholders(repl *caddy.Replacer) {
-	loadAvg, err := load.Avg()
+	loadAvg, err := loadAvgFunc()
 	if err == nil {
 		repl.Set("extra.loadavg.1", loadAvg.Load1)
 		repl.Set("extra.loadavg.5", loadAvg.Load5)
