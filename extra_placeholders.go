@@ -28,6 +28,8 @@ import (
 // defaultTimeFormatCustom is the fallback format used if no custom format is specified for the custom time placeholders.
 const defaultTimeFormatCustom = "2006-01-02 15:04:05"
 
+var nowFunc = time.Now
+
 // ExtraPlaceholders provides additional placeholders that can be used within Caddy configurations:
 //
 // Placeholder | Description
@@ -159,11 +161,13 @@ func (e ExtraPlaceholders) ServeHTTP(w http.ResponseWriter, r *http.Request, nex
 	}
 	e.setHostinfoPlaceholders(repl)
 
+	now := nowFunc()
+
 	// Set time placeholders for server's local time
-	e.setTimePlaceholders(repl, time.Now(), false)
+	e.setTimePlaceholders(repl, now, false)
 
 	// Set time placeholders for UTC time
-	e.setTimePlaceholders(repl, time.Now().UTC(), true)
+	e.setTimePlaceholders(repl, now.UTC(), true)
 
 	// Set newline placeholder
 	repl.Set("extra.newline", "\n")

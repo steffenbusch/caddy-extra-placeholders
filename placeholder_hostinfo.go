@@ -21,9 +21,11 @@ import (
 	"github.com/shirou/gopsutil/v4/host"
 )
 
+var hostUptimeFunc = host.Uptime
+
 // setHostinfoPlaceholders sets placeholders for system uptime in a human-readable format.
 func (e ExtraPlaceholders) setHostinfoPlaceholders(repl *caddy.Replacer) {
-	uptime, err := host.Uptime()
+	uptime, err := hostUptimeFunc()
 	if err == nil {
 		uptimeDuration := time.Duration(uptime) * time.Second
 		repl.Set("extra.hostinfo.uptime", uptimeDuration.String())
