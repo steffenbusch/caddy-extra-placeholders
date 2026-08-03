@@ -37,6 +37,54 @@ func TestValidate(t *testing.T) {
 	})
 }
 
+func TestProvision(t *testing.T) {
+	t.Run("sets defaults", func(t *testing.T) {
+		e := &ExtraPlaceholders{}
+
+		if err := e.Provision(caddy.Context{}); err != nil {
+			t.Fatalf("Provision() returned error: %v", err)
+		}
+
+		if e.RandIntMin != 0 {
+			t.Fatalf("RandIntMin = %d, want 0", e.RandIntMin)
+		}
+		if e.RandIntMax != 100 {
+			t.Fatalf("RandIntMax = %d, want 100", e.RandIntMax)
+		}
+		if e.TimeFormatCustom != defaultTimeFormatCustom {
+			t.Fatalf("TimeFormatCustom = %q, want %q", e.TimeFormatCustom, defaultTimeFormatCustom)
+		}
+		if e.logger == nil {
+			t.Fatal("logger is nil, want initialized logger")
+		}
+	})
+
+	t.Run("preserves explicit values", func(t *testing.T) {
+		e := &ExtraPlaceholders{
+			RandIntMin:       3,
+			RandIntMax:       9,
+			TimeFormatCustom: time.RFC3339,
+		}
+
+		if err := e.Provision(caddy.Context{}); err != nil {
+			t.Fatalf("Provision() returned error: %v", err)
+		}
+
+		if e.RandIntMin != 3 {
+			t.Fatalf("RandIntMin = %d, want 3", e.RandIntMin)
+		}
+		if e.RandIntMax != 9 {
+			t.Fatalf("RandIntMax = %d, want 9", e.RandIntMax)
+		}
+		if e.TimeFormatCustom != time.RFC3339 {
+			t.Fatalf("TimeFormatCustom = %q, want %q", e.TimeFormatCustom, time.RFC3339)
+		}
+		if e.logger == nil {
+			t.Fatal("logger is nil, want initialized logger")
+		}
+	})
+}
+
 func TestSetHTTPRequestURLPlaceholders(t *testing.T) {
 	repl := caddy.NewReplacer()
 	req := httptest.NewRequest(http.MethodGet, "/search?q=a+b&x=1", nil)
