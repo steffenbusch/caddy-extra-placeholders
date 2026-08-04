@@ -6,5 +6,4 @@ updates:
     schedule:
       interval: "weekly"
     allow:
-      - dependency-name: "github.com/shirou/gopsutil/v4"
-      - dependency-name: "go.uber.org/zap"
+      - dependency-type: "direct"
