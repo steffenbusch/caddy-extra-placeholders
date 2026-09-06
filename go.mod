@@ -6,7 +6,7 @@ toolchain go1.24.1
 
 require (
 	github.com/caddyserver/caddy/v2 v2.9.1
-	github.com/shirou/gopsutil/v4 v4.26.7
+	github.com/shirou/gopsutil/v4 v4.26.8
 	go.uber.org/zap v1.28.0
 )
 
